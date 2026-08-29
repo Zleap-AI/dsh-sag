@@ -1,0 +1,10 @@
+# Changelog
+
+## 0.1.0 - 2026-08-29
+
+- Validate the published bundle against the npm `latest` DeepSeek Harness `0.1.1-rc.2` release.
+- Publish dsh-sag as an installable DeepSeek Harness profile bundle.
+- Discover and configure a running local SAG through `setup` and `doctor`.
+- Expose search, reading, knowledge-source, upload, ingestion, and document-management tools.
+- Store connection metadata and credentials through dsh host services.
+- Keep the Python sidecar available as an explicit advanced embedded mode.
