@@ -7,10 +7,6 @@ dsh-sag 是 DeepSeek Harness 的 SAG 本地个人知识库插件，让 dsh 可�
 - DeepSeek Harness：`0.1.1-rc.2`（当前 npm `latest`）
 - SAG：需要包含“连接 dsh”设置和本地连接器 API
 
-目前 dsh 还没有正式的 `0.1.1` 稳定版，dsh-sag `0.1.0` 已基于最新发布的 `0.1.1-rc.2` 完成打包和安装验证。
-
-当前未修改的 SAG `1.8.3` 尚未包含本地连接器。正式版本发布前，请使用 [SAG PR #154](https://github.com/Zleap-AI/SAG/pull/154) 对应构建；PR 合并后，请使用首个包含该能力的 SAG 正式版本或更高版本。
-
 ## 快速开始
 
 确认 dsh 和 SAG 已启动，再安装并检查插件：
