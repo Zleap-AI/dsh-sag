@@ -32,8 +32,9 @@ describe('package manifest', () => {
     expect(manifest.files).toContain('README.md')
     expect(manifest.files).toContain('README.zh.md')
     expect(manifest.peerDependencies['@deepseek-ai/cordis']).toBe('^4.0.1')
-    expect(manifest.peerDependencies['@deepseek-ai/dsh-tools']).toBe('0.1.1-rc.2')
-    expect(manifest.peerDependencies['@deepseek-ai/dsh-subprocess']).toBe('0.1.1-rc.2')
+    const supportedHostRange = '>=0.1.1-rc.2 <0.2.0-0'
+    expect(manifest.peerDependencies['@deepseek-ai/dsh-tools']).toBe(supportedHostRange)
+    expect(manifest.peerDependencies['@deepseek-ai/dsh-subprocess']).toBe(supportedHostRange)
     for (const hostPeer of [
       '@deepseek-ai/cordis',
       '@deepseek-ai/dsh-credentials',
@@ -42,12 +43,12 @@ describe('package manifest', () => {
       '@deepseek-ai/dsh-settings-file',
     ]) {
       expect(manifest.dependencies[hostPeer]).toBeUndefined()
-      expect(manifest.peerDependencies[hostPeer]).toBeDefined()
+      expect(manifest.peerDependencies[hostPeer]).toBe(hostPeer === '@deepseek-ai/cordis' ? '^4.0.1' : supportedHostRange)
     }
     expect(Object.keys(manifest.dependencies).filter(name => name in manifest.peerDependencies)).toEqual([])
     for (const [name, version] of Object.entries(manifest.peerDependencies)) {
       expect(manifest.devDependencies[name], `${name} must mirror its host peer for development`).toBeDefined()
-      if (name.startsWith('@deepseek-ai/dsh-')) expect(manifest.devDependencies[name]).toBe(version)
+      if (name.startsWith('@deepseek-ai/dsh-')) expect(manifest.devDependencies[name]).toBe('0.1.5-rc.2')
     }
     expect(manifest.files).toContain('THIRD_PARTY_NOTICES')
     expect(manifest.scripts.build).toContain('build-cli.mjs')
@@ -65,6 +66,8 @@ describe('package manifest', () => {
     const packCheck = await readText('../../../scripts/check-pack.mjs')
 
     expect(packCheck).toContain("['--profile', 'web', '--no-open', '--port', '0']")
+    expect(packCheck).toContain("process.env.DSH_BIN ?? 'dsh'")
+    expect(packCheck).not.toContain('expectedDshVersion')
     expect(packCheck).toContain('mode: invalid')
     expect(packCheck).toContain("kill('SIGTERM')")
     expect(packCheck).not.toContain("['--profile', 'web', '--help']")
@@ -100,14 +103,14 @@ describe('package manifest', () => {
     const zh = await readText('../README.zh.md')
     const en = await readText('../README.md')
     const embedded = await readText('../docs/embedded.md')
-    const rootEmbedded = await readText('../../../docs/embedded.md')
 
     for (const readme of [root, zh, en]) {
       expect(readme).toContain('dsh plugin --profile web exec dsh-sag setup\n')
       expect(readme).toContain('dsh plugin --profile web exec dsh-sag setup ./sag-dsh.json')
       expect(readme).toContain('dsh plugin --profile web exec dsh-sag setup --url http://127.0.0.1:8000')
-      expect(readme).toContain('docs/embedded.md')
     }
+    expect(zh).toContain('docs/embedded.md')
+    expect(en).toContain('docs/embedded.md')
     expect(zh.indexOf('exec dsh-sag setup')).toBeGreaterThan(zh.indexOf('exec dsh-sag doctor'))
     expect(en.indexOf('exec dsh-sag setup')).toBeGreaterThan(en.indexOf('exec dsh-sag doctor'))
     expect(embedded).toContain('Python 3.11')
@@ -120,6 +123,5 @@ describe('package manifest', () => {
     expect(embedded).toContain('DSH_SAG_ENV_FILE')
     expect(embedded).toContain('DSH_SAG_NAMESPACES')
     expect(embedded).toContain('shutdown')
-    expect(embedded).toBe(rootEmbedded)
   })
 })

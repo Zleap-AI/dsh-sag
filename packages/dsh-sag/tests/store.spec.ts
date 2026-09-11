@@ -174,6 +174,10 @@ describe('SagConnectionStore', () => {
 })
 
 describe('registerSagSettings', () => {
+  it('uses a host-compatible literal settings namespace', () => {
+    expect(SAG_SETTINGS_NAMESPACE).toBe('dsh-sag')
+  })
+
   it('removes the dsh-sag namespace when its registering fiber disposes', async () => {
     const ctx = new Context()
     const providerFiber = ctx.plugin(MemorySettingsProvider)

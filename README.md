@@ -4,7 +4,7 @@ dsh-sag 是 DeepSeek Harness 的 SAG 本地个人知识库插件，让 dsh 可�
 
 ## 兼容版本
 
-- DeepSeek Harness：`0.1.1-rc.2`（当前 npm `latest`）
+- DeepSeek Harness：`0.1.x`，最低支持 `0.1.1-rc.2`
 - SAG：需要包含“连接 dsh”设置和本地连接器 API
 
 ## 快速开始

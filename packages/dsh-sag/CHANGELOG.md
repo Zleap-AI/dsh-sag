@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Keep settings namespace branding type-only so dsh host helper-export changes cannot prevent plugin startup.
+- Validate the packaged bundle against the dsh host selected by `DSH_BIN` instead of a fixed historical version.
+
 ## 0.1.0 - 2026-08-29
 
 - Validate the published bundle against the npm `latest` DeepSeek Harness `0.1.1-rc.2` release.

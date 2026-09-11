@@ -109,14 +109,13 @@ const profileEnvironment = {
   SAG_DSH_CONNECTION_FILE: connectionFile,
 }
 const dsh = process.env.DSH_BIN ?? 'dsh'
-const expectedDshVersion = '0.1.1-rc.2'
 const dshVersion = spawnSync(dsh, ['--version'], { encoding: 'utf8', env: profileEnvironment })
 if (dshVersion.error !== undefined) throw dshVersion.error
 const actualDshVersion = `${dshVersion.stdout ?? ''}${dshVersion.stderr ?? ''}`.trim()
-if (dshVersion.status !== 0 || actualDshVersion !== expectedDshVersion) {
+if (dshVersion.status !== 0 || actualDshVersion === '') {
   throw new Error(
-    `check:pack requires dsh ${expectedDshVersion}, got ${actualDshVersion || `exit ${dshVersion.status}`}; `
-    + 'set DSH_BIN to the current deepseek-harness rc.2 CLI',
+    `check:pack requires a working dsh CLI, got ${actualDshVersion || `exit ${dshVersion.status}`}; `
+    + 'set DSH_BIN to the host version being validated',
   )
 }
 execFileSync(dsh, ['plugin', '--profile', 'web', 'add', archivePath], {
@@ -262,4 +261,4 @@ const [cordisTarget] = cordisTargets
 if (cordisTarget.includes(join(isolatedDshHome, 'profiles', 'web', 'node_modules', '.pnpm'))) {
   throw new Error(`installed dsh-sag brought a private Cordis runtime into the profile: ${cordisTarget}`)
 }
-process.stdout.write(`verified ${archive}: ${entries.length} entries\n`)
+process.stdout.write(`verified ${archive}: ${entries.length} entries with dsh ${actualDshVersion}\n`)
