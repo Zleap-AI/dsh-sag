@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.1.1 - 2026-09-11
 
 - Keep settings namespace branding type-only so dsh host helper-export changes cannot prevent plugin startup.
 - Validate the packaged bundle against the dsh host selected by `DSH_BIN` instead of a fixed historical version.

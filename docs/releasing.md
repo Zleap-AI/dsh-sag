@@ -1,4 +1,4 @@
-# Publishing dsh-sag 0.1.0
+# Publishing dsh-sag 0.1.1
 
 This checklist prepares the public `@zleap-ai/dsh-sag` package. It does not publish automatically.
 
@@ -26,7 +26,7 @@ Inspect the generated manifest before publishing:
 
 ```sh
 pnpm --filter @zleap-ai/dsh-sag pack --dry-run
-npm view @zleap-ai/dsh-sag@0.1.0 version
+npm view @zleap-ai/dsh-sag@0.1.1 version
 ```
 
 The `npm view` command should report that the version does not exist. If it already exists, stop: npm versions are immutable.

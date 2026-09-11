@@ -1,7 +1,7 @@
 {
   "name": "@zleap-ai/dsh-sag",
   "description": "Local SAG personal knowledge base plugin for DeepSeek Harness",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "keywords": [
     "deepseek-harness",
     "dsh",
