@@ -6,7 +6,7 @@ This checklist prepares the public `@zleap-ai/dsh-sag` package. It does not publ
 
 - Node.js `^22.19.0` or `>=24.0.0`
 - pnpm `11.7.0`
-- dsh `0.1.1-rc.2` (the current npm `latest`) available as `dsh`, or selected with `DSH_BIN`
+- a working dsh `0.1.x` host available as `dsh`, or selected with `DSH_BIN`
 - npm access to the `@zleap-ai` organization
 
 ## Verify the release candidate
@@ -20,7 +20,7 @@ pnpm run test:python
 pnpm run check:pack
 ```
 
-`check:pack` builds the package twice, verifies the file allowlist and third-party notices, installs the generated archive into an isolated dsh Web profile, exercises `setup` and `doctor`, boots the profile, checks invalid configuration failure, and verifies that the plugin shares the host Cordis runtime.
+`check:pack` builds the package twice, verifies the file allowlist and third-party notices, installs the generated archive into an isolated dsh Web profile, exercises `setup` and `doctor`, boots the selected dsh host, checks invalid configuration failure, and verifies that the plugin shares the host Cordis runtime. Set `DSH_BIN` when validating a dsh upgrade; the smoke test must run against that exact host.
 
 Inspect the generated manifest before publishing:
 

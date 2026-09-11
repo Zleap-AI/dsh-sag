@@ -2,7 +2,7 @@
 
 dsh-sag lets DeepSeek Harness use the local SAG personal knowledge base for search, reading, upload, note ingestion, and document management.
 
-Compatible with DeepSeek Harness `0.1.1-rc.2`, the current npm `latest` (there is no final `0.1.1` release yet). SAG must include the Connect dsh setting and local connector API. The unmodified SAG `1.8.3` release does not include this capability; use the build from [SAG PR #154](https://github.com/Zleap-AI/SAG/pull/154), or a later SAG release that includes it.
+Compatible with DeepSeek Harness `0.1.x`, starting at `0.1.1-rc.2`. SAG must include the Connect dsh setting and local connector API. The unmodified SAG `1.8.3` release does not include this capability; use the build from [SAG PR #154](https://github.com/Zleap-AI/SAG/pull/154), or a later SAG release that includes it.
 
 ## Quick start
 

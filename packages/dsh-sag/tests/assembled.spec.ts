@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url'
 import { Context } from '@deepseek-ai/cordis'
 import type { CredentialKey, CredentialRecord } from '@deepseek-ai/dsh-credentials'
 import type { FileSystem } from '@deepseek-ai/dsh-fs'
-import { CallId } from '@deepseek-ai/dsh-llm'
+import { ToolCallId } from '@deepseek-ai/dsh-llm'
 import { SettingsProvider } from '@deepseek-ai/dsh-settings'
 import LocalSubprocessRuntime from '@deepseek-ai/dsh-subprocess-local'
 import SystemPrompt from '@deepseek-ai/dsh-system-prompt'
@@ -165,29 +165,29 @@ describe('assembled keyless plugin', () => {
         resources.push(plugin)
         await plugin
         const sources = await ctx.tools.execute({
-          callId: CallId('local-sources'), name: 'sag_list_sources', signal: new AbortController().signal, arguments: {},
+          callId: ToolCallId('local-sources'), name: 'sag_list_sources', signal: new AbortController().signal, arguments: {},
         })
         const status = await ctx.tools.execute({
-          callId: CallId('local-status'), name: 'sag_status', signal: new AbortController().signal, arguments: {},
+          callId: ToolCallId('local-status'), name: 'sag_status', signal: new AbortController().signal, arguments: {},
         })
         const upload = await ctx.tools.execute({
-          callId: CallId('local-upload'), name: 'sag_upload_file', signal: new AbortController().signal,
+          callId: ToolCallId('local-upload'), name: 'sag_upload_file', signal: new AbortController().signal,
           arguments: { path: uploadPath },
         })
         const uploadValue = value<{ readonly documentId: string }>(upload)
         const document = await ctx.tools.execute({
-          callId: CallId('local-document'), name: 'sag_get_document', signal: new AbortController().signal,
+          callId: ToolCallId('local-document'), name: 'sag_get_document', signal: new AbortController().signal,
           arguments: { document_id: uploadValue.documentId },
         })
         const search = await ctx.tools.execute({
-          callId: CallId('local-search'), name: 'sag_search', signal: new AbortController().signal,
+          callId: ToolCallId('local-search'), name: 'sag_search', signal: new AbortController().signal,
           arguments: { query: 'hello SAG' },
         })
         const searchValue = value<{ readonly evidences: readonly { readonly evidenceRef: string }[] }>(search)
         const evidenceRef = searchValue.evidences[0]?.evidenceRef
         if (evidenceRef === undefined) throw new Error('fake SAG returned no evidence')
         const read = await ctx.tools.execute({
-          callId: CallId('local-read'), name: 'sag_read', signal: new AbortController().signal,
+          callId: ToolCallId('local-read'), name: 'sag_read', signal: new AbortController().signal,
           arguments: { evidence_ref: evidenceRef },
         })
 
@@ -241,8 +241,8 @@ describe('assembled keyless plugin', () => {
       resources.push(plugin)
       await plugin
 
-      const status = await ctx.tools.execute({ callId: CallId('reduced-status'), name: 'sag_status', signal: new AbortController().signal, arguments: {} })
-      const search = await ctx.tools.execute({ callId: CallId('reduced-search'), name: 'sag_search', signal: new AbortController().signal, arguments: { query: 'hello SAG' } })
+      const status = await ctx.tools.execute({ callId: ToolCallId('reduced-status'), name: 'sag_status', signal: new AbortController().signal, arguments: {} })
+      const search = await ctx.tools.execute({ callId: ToolCallId('reduced-search'), name: 'sag_search', signal: new AbortController().signal, arguments: { query: 'hello SAG' } })
       expect(status).toMatchObject({ isError: false, value: { capabilities: ['knowledge.search', 'future.unknown'] } })
       expect(search).toMatchObject({ isError: false, value: { evidences: [expect.objectContaining({ sourceId: 'source-1' })] } })
       expect(server.requests).not.toContain('GET /api/v1/sources')
@@ -253,7 +253,7 @@ describe('assembled keyless plugin', () => {
         ['sag_read', { evidence_ref: 'not-decoded' }],
         ['sag_get_document', { source_id: 'source-1', document_id: 'document-1' }],
       ] as const) {
-        await expect(ctx.tools.execute({ callId: CallId(`reduced-${name}`), name, signal: new AbortController().signal, arguments: args })).resolves.toMatchObject({ isError: true })
+        await expect(ctx.tools.execute({ callId: ToolCallId(`reduced-${name}`), name, signal: new AbortController().signal, arguments: args })).resolves.toMatchObject({ isError: true })
       }
       expect(server.requests).toEqual(before)
     } finally {
@@ -278,13 +278,13 @@ describe('assembled keyless plugin', () => {
     await plugin
     try {
       const search = await ctx.tools.execute({
-        callId: CallId('search-1'), name: 'sag_search', signal: new AbortController().signal,
+        callId: ToolCallId('search-1'), name: 'sag_search', signal: new AbortController().signal,
         arguments: { query: 'DW-2412P30 上传限制' },
       })
       const evidenceRef = value<{ readonly evidences: readonly { readonly evidenceRef: string }[] }>(search).evidences[0]?.evidenceRef
       if (evidenceRef === undefined) throw new Error('fake embedded SAG returned no evidence')
       const read = await ctx.tools.execute({
-        callId: CallId('read-1'), name: 'sag_read', signal: new AbortController().signal,
+        callId: ToolCallId('read-1'), name: 'sag_read', signal: new AbortController().signal,
         arguments: { evidence_ref: evidenceRef },
       })
       expect({
@@ -297,7 +297,7 @@ describe('assembled keyless plugin', () => {
       const expectedCancel = JSON.parse(await readFile(resolve(root, 'examples/local/expected/cancel.json'), 'utf8'))
       const controller = new AbortController()
       const cancelled = ctx.tools.execute({
-        callId: CallId('search-cancel'), name: 'sag_search', signal: controller.signal,
+        callId: ToolCallId('search-cancel'), name: 'sag_search', signal: controller.signal,
         arguments: { query: 'slow cancellation probe' },
       })
       await new Promise(resolvePromise => setTimeout(resolvePromise, 20))

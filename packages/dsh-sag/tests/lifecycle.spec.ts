@@ -3,7 +3,7 @@ import { Context } from '@deepseek-ai/cordis'
 import type { Agent } from '@deepseek-ai/dsh-agent'
 import type { CredentialKey, CredentialRecord } from '@deepseek-ai/dsh-credentials'
 import type { FileSystem } from '@deepseek-ai/dsh-fs'
-import { CallId } from '@deepseek-ai/dsh-llm'
+import { ToolCallId } from '@deepseek-ai/dsh-llm'
 import { SettingsProvider, type SettingsNamespace } from '@deepseek-ai/dsh-settings'
 import SubprocessRuntime, { type SubprocessHandle, type SubprocessSpawnSpec } from '@deepseek-ai/dsh-subprocess'
 import SystemPrompt from '@deepseek-ai/dsh-system-prompt'
@@ -146,7 +146,7 @@ describe('Cordis lifecycle', () => {
       execute: () => { unrelatedCalls += 1; return Promise.resolve({}) },
     }))
     await expect(ctx.tools.execute({
-      callId: CallId('unrelated'), name: 'unrelated', arguments: {}, signal: new AbortController().signal,
+      callId: ToolCallId('unrelated'), name: 'unrelated', arguments: {}, signal: new AbortController().signal,
     })).resolves.toMatchObject({ isError: false })
     expect(unrelatedCalls).toBe(1)
 
@@ -169,18 +169,18 @@ describe('Cordis lifecycle', () => {
       name: 'sag_delete_document', arguments: { document_id: 'doc' }, signal: new AbortController().signal,
     }
 
-    const withoutApproval = await ctx.tools.execute({ ...input, callId: CallId('delete-no-approval') })
+    const withoutApproval = await ctx.tools.execute({ ...input, callId: ToolCallId('delete-no-approval') })
     expect(withoutApproval.isError).toBe(true)
     expect(deletes).toBe(0)
 
     const rejectedProvider = ctx.provide('approval', { request: vi.fn().mockResolvedValue('rejected') } as never)
-    const rejected = await ctx.tools.execute({ ...input, callId: CallId('delete-rejected'), agent: fakeAgent() })
+    const rejected = await ctx.tools.execute({ ...input, callId: ToolCallId('delete-rejected'), agent: fakeAgent() })
     expect(rejected.isError).toBe(true)
     expect(deletes).toBe(0)
     await rejectedProvider()
 
     ctx.provide('approval', { request: vi.fn().mockResolvedValue('allowed-once') } as never)
-    const allowed = await ctx.tools.execute({ ...input, callId: CallId('delete-allowed'), agent: fakeAgent() })
+    const allowed = await ctx.tools.execute({ ...input, callId: ToolCallId('delete-allowed'), agent: fakeAgent() })
     expect(allowed).toMatchObject({ isError: false, value: { deleted: true } })
     expect(deletes).toBe(1)
   })

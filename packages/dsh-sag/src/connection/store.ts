@@ -1,12 +1,12 @@
 import type { Context } from '@deepseek-ai/cordis'
 import { credentialKey, type CredentialProvider, type CredentialRecord } from '@deepseek-ai/dsh-credentials'
-import { settingsNamespace, type SettingsScope } from '@deepseek-ai/dsh-settings'
+import type { SettingsNamespace, SettingsScope } from '@deepseek-ai/dsh-settings'
 import z from '@deepseek-ai/schemastery'
 import { parseConnectionDescriptor } from './descriptor.js'
 import type { SagConnectionDescriptor, SagCredentialPayload, SagLocalSettings } from './types.js'
 
-/** The fixed settings namespace for the locally managed SAG connection. */
-export const SAG_SETTINGS_NAMESPACE = settingsNamespace('dsh-sag')
+/** The fixed settings namespace; its brand is type-only so host loading needs no helper export. */
+export const SAG_SETTINGS_NAMESPACE = 'dsh-sag' as SettingsNamespace
 
 /** The only credential record owned by the local SAG connection. */
 export const SAG_CREDENTIAL_KEY = credentialKey('dsh-sag', 'local')
