@@ -214,13 +214,16 @@ async function startWebAndStopAtReady() {
 
 async function rejectInvalidMode() {
   await writeFile(join(isolatedDshHome, 'profiles', 'web', 'cordis.patch.yml'), `- id: dsh-sag\n  config:\n    mode: invalid\n`)
+  const startedAt = Date.now()
   await new Promise((resolve, reject) => {
     const child = spawn(dsh, webArgs, { cwd: installation, env: profileEnvironment, stdio: ['ignore', 'pipe', 'pipe'] })
     let output = ''
+    // The host rolls back Web UI plugins serially before reporting schema errors.
+    // Allow slower CI runners to finish that rollback without weakening the assertions.
     const timeout = setTimeout(() => {
       child.kill('SIGKILL')
       reject(new Error(`invalid dsh-sag mode did not fail startup:\n${output}`))
-    }, 20_000)
+    }, 60_000)
     const record = (chunk) => { output = boundedOutput(output, chunk.toString()) }
     child.stdout.on('data', record)
     child.stderr.on('data', record)
@@ -236,6 +239,7 @@ async function rejectInvalidMode() {
       } else resolve()
     })
   })
+  process.stdout.write(`verified invalid-mode rejection in ${Date.now() - startedAt}ms\n`)
 }
 
 await startWebAndStopAtReady()
