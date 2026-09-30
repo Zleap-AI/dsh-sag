@@ -5,13 +5,15 @@ dsh-sag lets DeepSeek Harness use the local SAG personal knowledge base for sear
 ## Compatibility
 
 - dsh-sag: `0.1.1`, the published compatibility fix. Do not use `0.1.0` with newer dsh hosts.
-- DeepSeek Harness: reviewed against `0.1.5-rc.1` (npm `latest`) and `0.1.5-rc.2` (npm `next`) on 2026-09-13. The package declares a minimum of `0.1.1-rc.2`; its dependency range does not mean every future `0.1.x` release has been tested.
+- DeepSeek Harness: verified against `0.1.5-rc.1` and `0.1.5-rc.2`, rechecked on 2026-09-30. npm `latest` / `next` currently both point to `0.2.0-rc.2`, which is outside this plugin's declared host dependency range and has not been verified. The package declares a minimum of `0.1.1-rc.2`; its dependency range does not mean every `0.1.x` release has been tested.
 - Node.js: `^22.19.0` or `>=24.0.0`; both `dsh` and `pnpm` must be on PATH.
 - SAG must include the Connect dsh setting and local connector API.
 
 ## Quick start
 
 Install dsh and pnpm, then start SAG. Existing plugin users should follow “Upgrade and startup recovery” below first. Web does not need to be running to install the plugin:
+
+For a fresh dsh installation, use `npm install --global @deepseek-ai/dsh@0.1.5-rc.1`. Existing users of the verified versions do not need to reinstall dsh. If you already use dsh `0.2`, do not downgrade your existing environment in place; wait for compatibility support or use a separate environment for verification.
 
 ```sh
 dsh plugin --profile web add @zleap-ai/dsh-sag@0.1.1

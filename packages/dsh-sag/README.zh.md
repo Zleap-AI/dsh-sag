@@ -5,13 +5,15 @@ dsh-sag 让 DeepSeek Harness 直接使用运行在本机的 SAG 个人知识库�
 ## 兼容版本
 
 - dsh-sag：`0.1.1`（已发布的兼容修复版）；旧版 `0.1.0` 不适用于新版 dsh。
-- DeepSeek Harness：本次核对版本为 `0.1.5-rc.1`（npm `latest`）和 `0.1.5-rc.2`（npm `next`），核对日期为 2026-09-13。包声明最低支持 `0.1.1-rc.2`；依赖范围不代表未来所有 `0.1.x` 版本都已验证。
+- DeepSeek Harness：已验证 `0.1.5-rc.1` 和 `0.1.5-rc.2`，复核日期为 2026-09-30。npm `latest` / `next` 目前均为 `0.2.0-rc.2`，不在本插件声明的宿主依赖范围内，也未验证兼容性。包声明最低支持 `0.1.1-rc.2`；依赖范围不代表所有 `0.1.x` 版本都已验证。
 - Node.js：`^22.19.0` 或 `>=24.0.0`；`dsh` 和 `pnpm` 需要在 PATH 中。
 - SAG：需要包含“连接 dsh”设置和本地连接器 API。
 
 ## 开始使用
 
 先安装 dsh 和 pnpm，并启动 SAG。已安装旧插件的用户请先阅读下方“旧版升级与启动恢复”。安装插件时无需先启动 Web：
+
+首次安装 dsh 时可使用 `npm install --global @deepseek-ai/dsh@0.1.5-rc.1`；已有上述已验证版本无需重装。已使用 dsh `0.2` 的用户不要直接降级现有环境，请等待兼容支持，或使用独立环境验证。
 
 ```sh
 dsh plugin --profile web add @zleap-ai/dsh-sag@0.1.1
